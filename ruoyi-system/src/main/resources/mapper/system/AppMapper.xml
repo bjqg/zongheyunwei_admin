@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppMapper">
+    
+    <resultMap type="App" id="AppResult">
+        <result property="id"    column="id"    />
+        <result property="key"    column="key_"    />
+        <result property="acronym"    column="acronym"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="desc"    column="desc"    />
+    </resultMap>
+
+    <sql id="selectAppVo">
+        select id, key_, acronym, name, status, desc from app
+    </sql>
+
+    <select id="selectAppList" parameterType="App" resultMap="AppResult">
+        <include refid="selectAppVo"/>
+        <where>  
+            <if test="key != null  and key != ''"> and key_ = #{key}</if>
+            <if test="acronym != null  and acronym != ''"> and acronym = #{acronym}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="desc != null  and desc != ''"> and desc = #{desc}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppById" parameterType="Long" resultMap="AppResult">
+        <include refid="selectAppVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertApp" parameterType="App">
+        insert into app
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="key != null">key_,</if>
+            <if test="acronym != null">acronym,</if>
+            <if test="name != null">name,</if>
+            <if test="status != null">status,</if>
+            <if test="desc != null">desc,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="key != null">#{key},</if>
+            <if test="acronym != null">#{acronym},</if>
+            <if test="name != null">#{name},</if>
+            <if test="status != null">#{status},</if>
+            <if test="desc != null">#{desc},</if>
+         </trim>
+    </insert>
+
+    <update id="updateApp" parameterType="App">
+        update app
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="key != null">key_ = #{key},</if>
+            <if test="acronym != null">acronym = #{acronym},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="desc != null">desc = #{desc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAppById" parameterType="Long">
+        delete from app where id = #{id}
+    </delete>
+
+    <delete id="deleteAppByIds" parameterType="String">
+        delete from app where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

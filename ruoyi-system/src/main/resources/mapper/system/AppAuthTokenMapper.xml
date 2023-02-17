@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppAuthTokenMapper">
+    
+    <resultMap type="AppAuthToken" id="AppAuthTokenResult">
+        <result property="id"    column="id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="token"    column="token"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="dTime"    column="d_time"    />
+    </resultMap>
+
+    <sql id="selectAppAuthTokenVo">
+        select id, app_id, token, c_time, d_time from app_auth_token
+    </sql>
+
+    <select id="selectAppAuthTokenList" parameterType="AppAuthToken" resultMap="AppAuthTokenResult">
+        <include refid="selectAppAuthTokenVo"/>
+        <where>  
+            <if test="appId != null "> and app_id = #{appId}</if>
+            <if test="token != null  and token != ''"> and token = #{token}</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="dTime != null "> and d_time = #{dTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppAuthTokenById" parameterType="Long" resultMap="AppAuthTokenResult">
+        <include refid="selectAppAuthTokenVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAppAuthToken" parameterType="AppAuthToken">
+        insert into app_auth_token
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="token != null">token,</if>
+            <if test="cTime != null">c_time,</if>
+            <if test="dTime != null">d_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="token != null">#{token},</if>
+            <if test="cTime != null">#{cTime},</if>
+            <if test="dTime != null">#{dTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppAuthToken" parameterType="AppAuthToken">
+        update app_auth_token
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="token != null">token = #{token},</if>
+            <if test="cTime != null">c_time = #{cTime},</if>
+            <if test="dTime != null">d_time = #{dTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAppAuthTokenById" parameterType="Long">
+        delete from app_auth_token where id = #{id}
+    </delete>
+
+    <delete id="deleteAppAuthTokenByIds" parameterType="String">
+        delete from app_auth_token where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

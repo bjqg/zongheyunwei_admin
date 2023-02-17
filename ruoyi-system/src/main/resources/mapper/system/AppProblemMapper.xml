@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AppProblemMapper">
+    
+    <resultMap type="AppProblem" id="AppProblemResult">
+        <result property="id"    column="id"    />
+        <result property="appId"    column="app_id"    />
+        <result property="sourceId"    column="source_id"    />
+        <result property="level"    column="level"    />
+        <result property="desc"    column="desc"    />
+        <result property="hostName"    column="host_name"    />
+        <result property="hostIp"    column="host_ip"    />
+        <result property="hostMac"    column="host_mac"    />
+        <result property="hostLocation"    column="host_location"    />
+        <result property="cTime"    column="c_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectAppProblemVo">
+        select id, app_id, source_id, level, desc, host_name, host_ip, host_mac, host_location, c_time, status from app_problem
+    </sql>
+
+    <select id="selectAppProblemList" parameterType="AppProblem" resultMap="AppProblemResult">
+        <include refid="selectAppProblemVo"/>
+        <where>  
+            <if test="appId != null "> and app_id = #{appId}</if>
+            <if test="sourceId != null "> and source_id = #{sourceId}</if>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="desc != null  and desc != ''"> and desc = #{desc}</if>
+            <if test="hostName != null  and hostName != ''"> and host_name like concat('%', #{hostName}, '%')</if>
+            <if test="hostIp != null  and hostIp != ''"> and host_ip = #{hostIp}</if>
+            <if test="hostMac != null  and hostMac != ''"> and host_mac = #{hostMac}</if>
+            <if test="hostLocation != null  and hostLocation != ''"> and host_location = #{hostLocation}</if>
+            <if test="cTime != null "> and c_time = #{cTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppProblemById" parameterType="Long" resultMap="AppProblemResult">
+        <include refid="selectAppProblemVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAppProblem" parameterType="AppProblem">
+        insert into app_problem
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="appId != null">app_id,</if>
+            <if test="sourceId != null">source_id,</if>
+            <if test="level != null">level,</if>
+            <if test="desc != null">desc,</if>
+            <if test="hostName != null">host_name,</if>
+            <if test="hostIp != null">host_ip,</if>
+            <if test="hostMac != null">host_mac,</if>
+            <if test="hostLocation != null">host_location,</if>
+            <if test="cTime != null">c_time,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="appId != null">#{appId},</if>
+            <if test="sourceId != null">#{sourceId},</if>
+            <if test="level != null">#{level},</if>
+            <if test="desc != null">#{desc},</if>
+            <if test="hostName != null">#{hostName},</if>
+            <if test="hostIp != null">#{hostIp},</if>
+            <if test="hostMac != null">#{hostMac},</if>
+            <if test="hostLocation != null">#{hostLocation},</if>
+            <if test="cTime != null">#{cTime},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppProblem" parameterType="AppProblem">
+        update app_problem
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="appId != null">app_id = #{appId},</if>
+            <if test="sourceId != null">source_id = #{sourceId},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="desc != null">desc = #{desc},</if>
+            <if test="hostName != null">host_name = #{hostName},</if>
+            <if test="hostIp != null">host_ip = #{hostIp},</if>
+            <if test="hostMac != null">host_mac = #{hostMac},</if>
+            <if test="hostLocation != null">host_location = #{hostLocation},</if>
+            <if test="cTime != null">c_time = #{cTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAppProblemById" parameterType="Long">
+        delete from app_problem where id = #{id}
+    </delete>
+
+    <delete id="deleteAppProblemByIds" parameterType="String">
+        delete from app_problem where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
